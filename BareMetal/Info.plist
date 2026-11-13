@@ -4,7 +4,23 @@
 <dict>
 	<key>CFBundleExecutable</key><string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleName</key><string>BareMetal</string>
-	<key>CFBundleDisplayName</key><string>BareMetal</string>
+	<key>CFBundleDisplayName</key><string>PhantomWay</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>100.77.206.103</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key><true/>
+				<key>NSIncludesSubdomains</key><true/>
+			</dict>
+			<key>oks-a17</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key><true/>
+				<key>NSIncludesSubdomains</key><true/>
+			</dict>
+		</dict>
+	</dict>
 	<key>CFBundleIdentifier</key><string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleShortVersionString</key><string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key><string>$(CURRENT_PROJECT_VERSION)</string>

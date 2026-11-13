@@ -1,6 +1,51 @@
 import SwiftUI
 
+/// The app is PhantomWay: the crew room as a native app, signed in once and
+/// staying that way. The bare-metal sensor console rides along on a switcher.
 struct ContentView: View {
+    @StateObject private var webStore = PhantomWebStore()
+    @State private var showSensors = false
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ZStack {
+                PhantomWebView(store: webStore)
+
+                if webStore.failed {
+                    VStack(spacing: 12) {
+                        Text("Bridge unreachable")
+                            .font(.headline)
+                        Text("The room lives on your tailnet — check Tailscale is connected, then retry.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                        Button("Retry") { webStore.reload() }
+                    }
+                    .padding()
+                    .background(.ultraThinMaterial)
+                }
+
+                if showSensors {
+                    SensorConsoleView()
+                        .background(Color(.systemBackground))
+                }
+            }
+
+            Divider()
+            HStack {
+                Button(showSensors ? "Room" : "Sensors") { showSensors.toggle() }
+                Spacer()
+                if !showSensors {
+                    Button("Reload") { webStore.reload() }
+                }
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+        }
+    }
+}
+
+struct SensorConsoleView: View {
     @EnvironmentObject var bus: SensorBus
 
     var body: some View {

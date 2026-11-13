@@ -1,18 +1,18 @@
 {
-  "name": "Marrow",
-  "identifier": "com.marrow.source",
-  "apps": [
-    {
-      "name": "BareMetal",
-      "bundleIdentifier": "com.marrow.baremetal",
-      "developerName": "Marrow",
-      "version": "0.1.1",
-      "versionDate": "2026-11-13T21:19:33Z",
-      "downloadURL": "https://github.com/egglockedgoof/BareMetal/releases/download/build-4/BareMetal.ipa",
-      "localizedDescription": "Bare-metal sensor foundation: raw motion, barometer, GPS, mic tap, LiDAR depth, BLE scan, body state.",
-      "iconURL": "",
-      "size": 70234
-    }
-  ],
-  "news": []
+    "name": "Marrow",
+    "identifier": "com.marrow.source",
+    "apps": [
+        {
+            "name": "PhantomWay",
+            "bundleIdentifier": "com.marrow.baremetal",
+            "developerName": "Marrow",
+            "version": "0.1.1",
+            "versionDate": "2026-11-13T21:19:33Z",
+            "downloadURL": "https://github.com/egglockedgoof/BareMetal/releases/download/build-4/BareMetal.ipa",
+            "localizedDescription": "PhantomWay as a native app: the crew room without the PWA \u2014 sign in once, stay in. Bare-metal sensor console built in.",
+            "iconURL": "",
+            "size": 70234
+        }
+    ],
+    "news": []
 }
