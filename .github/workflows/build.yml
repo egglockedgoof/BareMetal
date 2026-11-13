@@ -1,0 +1,58 @@
+name: Build BareMetal (.ipa, unsigned)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate project
+        run: xcodegen generate
+
+      - name: Build (no signing — SideStore/AltStore re-sign on install)
+        run: |
+          xcodebuild -project BareMetal.xcodeproj -scheme BareMetal \
+            -sdk iphoneos -configuration Release \
+            -derivedDataPath build/dd \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            build
+
+      - name: Package .ipa
+        run: |
+          APP=$(find build/dd/Build/Products/Release-iphoneos -maxdepth 1 -name "*.app" | head -1)
+          mkdir -p Payload && cp -R "$APP" Payload/
+          zip -r BareMetal.ipa Payload
+          ls -la BareMetal.ipa
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: BareMetal build ${{ github.run_number }}
+          files: BareMetal.ipa
+
+      - name: Update apps.json source
+        run: |
+          SIZE=$(stat -f%z BareMetal.ipa)
+          DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          REPO="${{ github.repository }}"
+          jq --arg url "https://github.com/$REPO/releases/download/build-${{ github.run_number }}/BareMetal.ipa" \
+             --arg date "$DATE" --argjson size "$SIZE" \
+             '.apps[0].downloadURL = $url | .apps[0].versionDate = $date | .apps[0].size = $size' \
+             apps.json > apps.tmp && mv apps.tmp apps.json
+          git config user.name "baremetal-ci"
+          git config user.email "ci@marrow.local"
+          git add apps.json
+          git commit -m "source: build ${{ github.run_number }} [skip ci]" || echo "no change"
+          git push

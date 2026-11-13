@@ -1,0 +1,8 @@
+.DS_Store
+*.ipa
+*.app
+build/
+DerivedData/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+BareMetal.xcodeproj/
