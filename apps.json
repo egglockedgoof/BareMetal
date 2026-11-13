@@ -6,9 +6,9 @@
       "name": "BareMetal",
       "bundleIdentifier": "com.marrow.baremetal",
       "developerName": "Marrow",
-      "version": "0.1.0",
-      "versionDate": "2026-11-13T21:15:59Z",
-      "downloadURL": "https://github.com/egglockedgoof/BareMetal/releases/download/build-3/BareMetal.ipa",
+      "version": "0.1.1",
+      "versionDate": "2026-11-13T21:19:33Z",
+      "downloadURL": "https://github.com/egglockedgoof/BareMetal/releases/download/build-4/BareMetal.ipa",
       "localizedDescription": "Bare-metal sensor foundation: raw motion, barometer, GPS, mic tap, LiDAR depth, BLE scan, body state.",
       "iconURL": "",
       "size": 70234
