@@ -47,9 +47,13 @@ jobs:
           SIZE=$(stat -f%z BareMetal.ipa)
           DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           REPO="${{ github.repository }}"
+          rm -rf /tmp/ipa_extract && mkdir -p /tmp/ipa_extract
+          unzip -o -q BareMetal.ipa "Payload/*/Info.plist" -d /tmp/ipa_extract
+          VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" /tmp/ipa_extract/Payload/*.app/Info.plist)
+          echo "apps.json version -> $VERSION"
           jq --arg url "https://github.com/$REPO/releases/download/build-${{ github.run_number }}/BareMetal.ipa" \
-             --arg date "$DATE" --argjson size "$SIZE" \
-             '.apps[0].downloadURL = $url | .apps[0].versionDate = $date | .apps[0].size = $size' \
+             --arg date "$DATE" --argjson size "$SIZE" --arg ver "$VERSION" \
+             '.apps[0].downloadURL = $url | .apps[0].versionDate = $date | .apps[0].size = $size | .apps[0].version = $ver' \
              apps.json > apps.tmp && mv apps.tmp apps.json
           git config user.name "baremetal-ci"
           git config user.email "ci@marrow.local"
