@@ -25,15 +25,20 @@ final class DepthSensors: NSObject, ARSessionDelegate {
         if let depth = frame.sceneDepth {
             let map = depth.depthMap
             let w = CVPixelBufferGetWidth(map), h = CVPixelBufferGetHeight(map)
+            // Rows can be padded: index by bytesPerRow, never assume w*h contiguous floats.
+            let rowFloats = CVPixelBufferGetBytesPerRow(map) / MemoryLayout<Float32>.size
             CVPixelBufferLockBaseAddress(map, .readOnly)
             if let base = CVPixelBufferGetBaseAddress(map) {
                 let ptr = base.assumingMemoryBound(to: Float32.self)
-                let stride = 8 // sample every 8th pixel: raw enough, fast enough
-                var i = 0
-                while i < w * h {
-                    let v = ptr[i]
-                    if v > 0 { minD = min(minD, v); maxD = max(maxD, v); sum += v; count += 1 }
-                    i += stride
+                var y = 0
+                while y < h {
+                    var x = 0
+                    while x < w {
+                        let v = ptr[y * rowFloats + x]
+                        if v > 0 { minD = min(minD, v); maxD = max(maxD, v); sum += v; count += 1 }
+                        x += 4
+                    }
+                    y += 4
                 }
             }
             CVPixelBufferUnlockBaseAddress(map, .readOnly)
