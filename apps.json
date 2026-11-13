@@ -6,12 +6,12 @@
       "name": "PhantomWay",
       "bundleIdentifier": "com.marrow.baremetal",
       "developerName": "Marrow",
-      "version": "0.2.0",
-      "versionDate": "2026-11-13T21:24:48Z",
-      "downloadURL": "https://github.com/egglockedgoof/BareMetal/releases/download/build-5/BareMetal.ipa",
+      "version": "0.2.1",
+      "versionDate": "2026-11-13T21:44:07Z",
+      "downloadURL": "https://github.com/egglockedgoof/BareMetal/releases/download/build-6/BareMetal.ipa",
       "localizedDescription": "PhantomWay as a native app: the crew room without the PWA — sign in once, stay in. Bare-metal sensor console built in.",
       "iconURL": "",
-      "size": 86108
+      "size": 53808
     }
   ],
   "news": []
