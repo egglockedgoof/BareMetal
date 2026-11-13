@@ -14,11 +14,6 @@
 				<key>NSExceptionAllowsInsecureHTTPLoads</key><true/>
 				<key>NSIncludesSubdomains</key><true/>
 			</dict>
-			<key>oks-a17</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key><true/>
-				<key>NSIncludesSubdomains</key><true/>
-			</dict>
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key><string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>

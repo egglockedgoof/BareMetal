@@ -10,7 +10,13 @@ final class PhantomWebStore: ObservableObject {
     weak var webView: WKWebView?
     private var triedFallback = false
 
-    private static let primaryURL = URL(string: "http://oks-a17:3000/")
+    // The room's own client code (site/highway.js, HW_BRIDGE) only treats the
+    // ts.net door and the raw tailnet IP as same-origin; any other host makes
+    // every API call — sign-in included — detour to the door, and the stored
+    // session token is scoped per origin, so loading from an unlisted host
+    // both breaks sign-in and orphans the saved login. Load the door first,
+    // the heart's IP second. Nothing else.
+    private static let primaryURL = URL(string: "https://phantomway-door.tail0a8095.ts.net")
     private static let fallbackURL = URL(string: "http://100.77.206.103:3000/")
 
     func loadPrimary() {
@@ -52,6 +58,7 @@ struct PhantomWebView: UIViewRepresentable {
         config.allowsInlineMediaPlayback = true
         let webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = context.coordinator
+        webView.uiDelegate = context.coordinator
         webView.allowsBackForwardNavigationGestures = true
         store.webView = webView
         store.loadPrimary()
@@ -60,9 +67,18 @@ struct PhantomWebView: UIViewRepresentable {
 
     func updateUIView(_ uiView: WKWebView, context: Context) {}
 
-    final class Coordinator: NSObject, WKNavigationDelegate {
+    final class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate {
         let store: PhantomWebStore
         init(store: PhantomWebStore) { self.store = store }
+
+        /// window.open / target=_blank would silently die without a UI
+        /// delegate; load them in the same view so sign-in flows survive.
+        func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+            if let url = navigationAction.request.url {
+                webView.load(URLRequest(url: url))
+            }
+            return nil
+        }
 
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             DispatchQueue.main.async { self.store.failed = false }
